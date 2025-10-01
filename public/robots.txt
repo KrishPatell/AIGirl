@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://vixlor.com/sitemap.xml
+
+# Block access to sensitive areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+Disallow: /private/
+
+# Allow access to important resources
+Allow: /images/
+Allow: /css/
+Allow: /js/
+Allow: /fonts/
+
+# Crawl delay (optional)
+Crawl-delay: 1
+
+# Host declaration
+Host: https://vixlor.com
