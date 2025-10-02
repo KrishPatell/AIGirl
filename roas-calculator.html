@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ROAS Calculator | QuickAds – Crack the ROAS Formula</title>
+    <meta name="description" content="Use QuickAds' free ROAS calculator to find return on ad spend, break-even ROAS, profit and margin instantly—then optimize your ads to scale profitably." />
+    <style>
+      :root{
+        --primary:#6938ef; --primary-dark:#4b1cd2; --accent:#ff7ad9; --lemon:#fce48f;
+        --bg:#f7f5ff; --surface:#ffffff; --ink:#101828; --muted:#475467;
+        --ring:rgba(105,56,239,.24); --ring-2:rgba(105,56,239,.14);
+        --shadow:0 40px 80px -48px rgba(105,56,239,.28);
+        --max:1160px;
+        --font:"Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+        --font-accent:"DM Sans", var(--font);
+      }
+
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Sans:wght@600;700&display=swap");
+
+      *{box-sizing:border-box}
+      html,body{margin:0;padding:0;font-family:var(--font);color:var(--ink);background:linear-gradient(180deg,#ffffff 0%, var(--bg) 100%);line-height:1.55}
+      a{color:inherit;text-decoration:none}
+      img{max-width:100%;display:block}
+
+      .nav{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--ring-2)}
+      .nav-inner{max-width:var(--max);margin:0 auto;padding:16px 22px;display:flex;gap:16px;align-items:center;justify-content:space-between}
+      .brand{display:flex;gap:10px;align-items:center;font-weight:800}
+      .brand::before{content:"";width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--lemon),var(--primary) 55%, var(--accent));box-shadow:0 10px 24px -12px rgba(105,56,239,.6)}
+
+      .section{padding:100px 22px}
+      .inner{max-width:var(--max);margin:0 auto}
+
+      /* Hero */
+      .hero{position:relative;overflow:hidden;padding-top:120px}
+      .hero::before{content:"";position:absolute;inset:-10% -20%;background:
+        radial-gradient(1200px 580px at 10% -10%, rgba(105,56,239,.18), transparent 70%),
+        radial-gradient(900px 520px at 90% -10%, rgba(255,122,217,.18), transparent 70%);
+        pointer-events:none}
+      .hero-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:34px}
+      .hero-left{grid-column:span 6;display:grid;gap:18px;align-content:center}
+      .hero-right{grid-column:span 6}
+      .eyebrow{display:inline-flex;gap:10px;align-items:center;padding:7px 16px;border-radius:999px;background:rgba(105,56,239,.12);border:1px solid var(--ring);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--primary-dark)}
+      .eyebrow::before{content:"";width:6px;height:6px;border-radius:999px;background:var(--lemon)}
+      h1{font-family:var(--font-accent);font-weight:700;letter-spacing:-.015em;font-size:clamp(3rem,6vw,4.2rem);line-height:1.04;margin:12px 0 8px}
+      h1 .grad{background:linear-gradient(135deg,var(--lemon),var(--primary) 55%, var(--accent));-webkit-background-clip:text;color:transparent}
+      .sub{color:var(--muted);max-width:560px}
+      .cta{display:inline-flex;gap:10px;align-items:center;padding:.9rem 1.6rem;border-radius:999px;background:linear-gradient(135deg,var(--lemon),var(--primary) 55%, var(--primary-dark));color:#fff;font-weight:700;box-shadow:0 20px 44px -24px rgba(105,56,239,.5)}
+
+      /* Calculator Card */
+      .calc{position:relative;border-radius:28px;background:linear-gradient(160deg, rgba(255,255,255,.96), rgba(245,241,255,.98));box-shadow:var(--shadow);border:1px solid rgba(105,56,239,.16);padding:20px;overflow:hidden;pointer-events:auto}
+      .calc::after{content:"";position:absolute;inset:-35% -25%;border-radius:50%;background:radial-gradient(circle at 30% 30%, rgba(105,56,239,.25), transparent 60%);filter:blur(70px);pointer-events:none}
+      .calc h3{margin:0 0 10px;font-size:1.05rem;font-family:var(--font-accent);color:var(--primary-dark)}
+      .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+      .field{display:grid;gap:6px}
+      .label{font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+      .input{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid rgba(16,24,40,.08);padding:.78rem .9rem;border-radius:12px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.6)}
+      .input input{all:unset;flex:1;font-weight:600;color:var(--ink)}
+      .pill{display:inline-flex;gap:8px;align-items:center;padding:6px 10px;border-radius:999px;background:rgba(105,56,239,.12);color:var(--primary-dark);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700}
+      .results{margin-top:16px;display:grid;gap:10px}
+      .stat{display:flex;justify-content:space-between;align-items:center;border:1px solid rgba(105,56,239,.14);background:rgba(255,255,255,.7);padding:10px 12px;border-radius:12px}
+      .stat strong{font-size:1.05rem}
+      .status{margin-top:8px;display:flex;gap:8px;align-items:center;font-size:.9rem}
+      .ok{color:#05603a;background:rgba(5,96,58,.08);border:1px solid rgba(5,96,58,.18);padding:6px 10px;border-radius:999px}
+      .warn{color:#7a2e0e;background:rgba(122,46,14,.08);border:1px solid rgba(122,46,14,.18);padding:6px 10px;border-radius:999px}
+      .actions{margin-top:12px;display:flex;gap:10px}
+      .btn{flex:1;display:inline-flex;justify-content:center;align-items:center;gap:8px;padding:.8rem 1rem;border-radius:12px;font-weight:700;cursor:pointer;border:1px solid var(--ring);pointer-events:auto;position:relative;z-index:10}
+      .btn.primary{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border-color:transparent;box-shadow:0 16px 36px -24px rgba(105,56,239,.45)}
+      .btn.secondary{background:rgba(105,56,239,.08);color:var(--primary-dark)}
+
+      /* Problem/Solution */
+      .split{display:grid;grid-template-columns:repeat(12,1fr);gap:28px}
+      .card{grid-column:span 6;border:1px solid var(--ring-2);border-radius:22px;background:#fff;box-shadow:0 24px 48px -36px rgba(16,24,40,.2);padding:26px}
+      .card h3{margin:0 0 10px;font-size:1.4rem;font-family:var(--font-accent)}
+      .list{display:grid;gap:12px;margin:0;padding:0}
+      .list li{list-style:none;display:grid;grid-template-columns:24px 1fr;gap:10px;align-items:start}
+      .dot{width:10px;height:10px;border-radius:50%;background:var(--primary);margin-top:.35rem}
+
+      /* Benefits */
+      .benefits{display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:18px}
+      .benefit{border:1px solid var(--ring-2);border-radius:22px;background:#fff;box-shadow:0 20px 40px -34px rgba(105,56,239,.22);padding:22px;display:grid;gap:8px}
+      .benefit strong{font-family:var(--font-accent)}
+
+      /* Steps */
+      .steps{display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:18px}
+      .step{position:relative;border:1px solid var(--ring-2);border-radius:22px;background:#fff;box-shadow:0 20px 40px -34px rgba(16,24,40,.22);padding:22px}
+      .step::after{content:attr(data-step);position:absolute;top:18px;right:18px;color:var(--primary-dark);opacity:.35;letter-spacing:.16em;font-weight:700;font-size:.8rem}
+
+      /* FAQ */
+      .faq{display:grid;grid-template-columns:repeat(2,minmax(260px,1fr));gap:16px}
+      .faq-item{border:1px solid var(--ring-2);border-radius:18px;background:#fff;box-shadow:0 16px 36px -30px rgba(16,24,40,.22);padding:18px}
+      .faq-item h4{margin:0 0 8px;font-size:1.02rem;font-family:var(--font-accent)}
+
+      .center{display:flex;justify-content:center}
+
+      footer{background:#0f1020;color:rgba(255,255,255,.78);padding:60px 22px;margin-top:80px}
+      .foot{max-width:var(--max);margin:0 auto;display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
+
+      @media(max-width: 1100px){.hero-left,.hero-right{grid-column:1/-1}.hero-right{order:-1}.benefits,.steps,.faq{grid-template-columns:1fr}.split .card{grid-column:1/-1}}
+    </style>
+  </head>
+  <body>
+    <header class="nav">
+      <div class="nav-inner">
+        <div class="brand">QuickAds.ai</div>
+        <a class="cta" href="#calc">Calculate My ROAS Now</a>
+      </div>
+    </header>
+
+    <section class="section hero">
+      <div class="inner hero-grid">
+        <div class="hero-left">
+          <span class="eyebrow">ROAS Strategy</span>
+          <h1>Crack the <span class="grad">ROAS Formula</span> — Turn Every Dollar Into Profit</h1>
+          <p class="sub">Stop wasting ad spend. Use our ROAS calculator and marketing solution to maximize profit, not just clicks.</p>
+          <div>
+            <a class="cta" href="#calc">Calculate My ROAS Now</a>
+          </div>
+        </div>
+        <div class="hero-right">
+          <div id="calc" class="calc" aria-live="polite">
+            <div class="pill">ROAS Calculator</div>
+            <h3>Crack the ROAS Formula</h3>
+            <div class="row">
+              <label class="field">
+                <span class="label">Ad Spend ($)</span>
+                <div class="input"><input id="spend" type="number" min="0" step="0.01" inputmode="decimal" placeholder="1000" aria-label="Ad spend in US dollars"/></div>
+              </label>
+              <label class="field">
+                <span class="label">Revenue ($)</span>
+                <div class="input"><input id="revenue" type="number" min="0" step="0.01" inputmode="decimal" placeholder="3500" aria-label="Revenue in US dollars"/></div>
+              </label>
+            </div>
+            <div class="row" style="margin-top:10px">
+              <label class="field">
+                <span class="label">COGS % (optional)</span>
+                <div class="input"><input id="cogs" type="number" min="0" max="100" step="0.1" inputmode="decimal" placeholder="30" aria-label="Cost of goods percentage"/><span>%</span></div>
+              </label>
+            </div>
+            <div class="results" aria-live="polite">
+              <div class="stat"><span>ROAS</span><strong id="roas">—</strong></div>
+              <div class="stat"><span>Break‑Even ROAS</span><strong id="be">—</strong></div>
+              <div class="stat"><span>Profit</span><strong id="profit">—</strong></div>
+              <div class="stat"><span>Profit Margin</span><strong id="margin">—</strong></div>
+              <div class="status" id="status"></div>
+            </div>
+              <div class="actions">
+                <button id="calcBtn" class="btn primary" type="button">Calculate</button>
+                <button id="resetBtn" class="btn secondary" type="button">Reset</button>
+              </div>
+            <p style="margin-top:10px;color:var(--muted);font-size:.85rem">Estimates only. For US currency formatting; exclude taxes/shipping unless included in revenue.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="inner split">
+        <div class="card">
+          <h3>Running ads is easy. Making them profitable? Not so much.</h3>
+          <ul class="list">
+            <li><span class="dot"></span><span>Ad spend vanishing without returns.</span></li>
+            <li><span class="dot"></span><span>Not knowing the ROAS formula or how to track results.</span></li>
+            <li><span class="dot"></span><span>Confusion between ROAS vs ROI.</span></li>
+            <li><span class="dot"></span><span>Scaling without hitting the break‑even ROAS threshold.</span></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Solution</h3>
+          <p>Our platform simplifies ROAS calculation and helps you apply it directly to your campaigns. You’ll see exactly where your ad dollars go, how to increase ROAS, and when to optimize or scale.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="inner">
+        <div class="how-header" style="text-align:center;max-width:720px;margin:0 auto 28px">
+          <div class="eyebrow">Benefits</div>
+          <h2 style="margin:14px 0 8px">Why marketers use our ROAS engine</h2>
+        </div>
+        <div class="benefits">
+          <div class="benefit"><strong>Instant Profit Clarity</strong><span>Know exactly how much you earn for every dollar spent. No guesswork—just results.</span></div>
+          <div class="benefit"><strong>Smart Scaling</strong><span>Identify campaigns that crush it and double down for maximum ROAS.</span></div>
+          <div class="benefit"><strong>Save Ad Spend</strong><span>Cut wasted budgets by spotting underperforming ads with real‑time insights.</span></div>
+          <div class="benefit"><strong>Data‑Driven Confidence</strong><span>No more gut feeling. Use accurate ROAS calculations to make smarter decisions.</span></div>
+          <div class="benefit"><strong>Simple &amp; Fast</strong><span>Built‑in ROAS calculator shows results in seconds—no spreadsheets needed.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="inner">
+        <div class="how-header" style="text-align:center;max-width:720px;margin:0 auto 28px">
+          <div class="eyebrow">How it works</div>
+          <h2 style="margin:14px 0 8px">3 Simple Steps</h2>
+        </div>
+        <div class="steps">
+          <div class="step" data-step="STEP 01"><strong>Enter Your Numbers</strong><p>Input ad spend + revenue into the ROAS calculator.</p></div>
+          <div class="step" data-step="STEP 02"><strong>See Your ROAS</strong><p>Get your ROAS formula results instantly.</p></div>
+          <div class="step" data-step="STEP 03"><strong>Optimize &amp; Scale</strong><p>Apply insights to cut waste and increase ROAS.</p></div>
+        </div>
+        <div class="center" style="margin-top:22px"><a class="cta" href="#calc">Try the ROAS Calculator Now</a></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="inner split">
+        <div class="card" style="grid-column:1/-1">
+          <div class="how-header" style="text-align:center;max-width:820px;margin:0 auto 8px">
+            <div class="eyebrow">Why Choose Us</div>
+            <h2 style="margin:14px 0 8px">Other tools just show numbers. We show strategy.</h2>
+            <p style="color:var(--muted)">Unlike generic dashboards, our solution gives you actionable insights, not just raw data—plus:</p>
+          </div>
+          <ul class="list" style="max-width:760px;margin:0 auto">
+            <li><span class="dot"></span><span>Break‑even ROAS calculator to know your profit line.</span></li>
+            <li><span class="dot"></span><span>Clear ROAS vs ROI comparisons so you make the right call.</span></li>
+            <li><span class="dot"></span><span>Live recommendations on when to scale, pause, or iterate creative.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="inner">
+        <div class="how-header" style="text-align:center;max-width:720px;margin:0 auto 28px">
+          <div class="eyebrow">FAQ</div>
+          <h2>Everything you need to know about ROAS</h2>
+        </div>
+        <div class="faq">
+          <div class="faq-item"><h4>1. What is ROAS?</h4><p>ROAS stands for Return on Ad Spend—it’s how much you make for every $1 spent.</p></div>
+          <div class="faq-item"><h4>2. How to calculate ROAS?</h4><p>Use the ROAS formula: Revenue ÷ Ad Spend. Our calculator does it instantly.</p></div>
+          <div class="faq-item"><h4>3. What’s a good ROAS?</h4><p>Depends on your industry, but generally 3–4x is solid. Use break‑even ROAS to see where profit starts.</p></div>
+          <div class="faq-item"><h4>4. ROAS vs ROI—what’s the difference?</h4><p>ROI includes all costs; ROAS focuses only on ad spend. Both matter, but ROAS reveals ad performance.</p></div>
+          <div class="faq-item"><h4>5. Can this help me increase ROAS?</h4><p>Yes—by showing which campaigns to scale and which to cut, you’ll get more return for every dollar.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0">
+      <div class="inner center" style="text-align:center">
+        <div class="how-header" style="max-width:780px;margin:0 auto 18px">
+          <h2>Your ads shouldn’t be a gamble. With the right ROAS calculation, every dollar turns into measurable profit.</h2>
+        </div>
+        <a class="cta" href="#calc">Start Optimizing My ROAS Today</a>
+      </div>
+    </section>
+
+    <footer>
+      <div class="foot">
+        <div><strong>QuickAds.ai</strong><div>Built for performance marketers who scale with data‑driven creative.</div></div>
+        <div>© 2025 QuickAds.ai</div>
+      </div>
+    </footer>
+
+    <script>
+      const $ = (id) => document.getElementById(id);
+      const spendEl = $("spend");
+      const revEl = $("revenue");
+      const cogsEl = $("cogs");
+      const roasEl = $("roas");
+      const profitEl = $("profit");
+      const marginEl = $("margin");
+      const beVal = $("be");
+      const statusEl = $("status");
+
+      const parse = (v) => {
+        if (typeof v === 'string') v = v.replace(/[,\s$%]/g, '');
+        const n = parseFloat(v);
+        return Number.isFinite(n) ? n : 0;
+      };
+
+      const fmtMoney = (n) => n.toLocaleString('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
+      const fmtPct = (n) => `${(n*100).toFixed(1)}%`;
+
+      function calc(){
+        const spend = parse(spendEl.value);
+        const rev = parse(revEl.value);
+        const cogsPct = Math.min(100, Math.max(0, parse(cogsEl.value)));
+
+        const roas = spend > 0 ? rev / spend : 0;
+        const cogs = rev * (cogsPct/100);
+        const profit = rev - spend - cogs;
+        const margin = rev > 0 ? profit / rev : 0;
+        const grossMargin = rev > 0 ? (rev - cogs)/rev : 0; // 1 - COGS%
+        const beRoas = grossMargin > 0 ? 1 / grossMargin : 1; // default 1× if no margin given
+
+        roasEl.textContent = roas ? `${roas.toFixed(2)}×` : '—';
+        profitEl.textContent = rev || spend ? fmtMoney(profit) : '—';
+        marginEl.textContent = rev ? fmtPct(margin) : '—';
+        beVal.textContent = beRoas ? `${beRoas.toFixed(2)}×` : '—';
+
+        statusEl.innerHTML = '';
+        if (spend === 0 && rev === 0) return;
+        const pill = document.createElement('span');
+        if (roas >= beRoas) { pill.className='ok'; pill.textContent = 'Above break‑even — scale with confidence'; }
+        else { pill.className='warn'; pill.textContent = 'Below break‑even — optimize or cut spend'; }
+        statusEl.appendChild(pill);
+      }
+
+      [spendEl, revEl, cogsEl].forEach(el=>{
+        el.addEventListener('input', calc);
+        el.addEventListener('blur', calc);
+      });
+      const calcBtn = document.getElementById('calcBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      if (calcBtn) calcBtn.addEventListener('click', calc);
+      if (resetBtn) resetBtn.addEventListener('click', ()=>{
+        spendEl.value = '';
+        revEl.value = '';
+        cogsEl.value = '';
+        roasEl.textContent = '—';
+        profitEl.textContent = '—';
+        marginEl.textContent = '—';
+        beVal.textContent = '—';
+        statusEl.innerHTML = '';
+      });
+
+      // Seed defaults for quick demo
+      spendEl.value = '1000';
+      revEl.value = '3500';
+      cogsEl.value = '30';
+      calc();
+    </script>
+  </body>
+</html>
+
