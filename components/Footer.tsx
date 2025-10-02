@@ -1,10 +1,11 @@
 import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 const footerColumns = [
   {
     title: 'Product',
     links: [
-      { label: 'Generate', href: '#prompt' },
+      { label: 'Generate', href: '#cta' },
       { label: 'Pricing', href: '#pricing' },
       { label: 'Gallery', href: '#gallery' },
       { label: 'How it works', href: '#how-it-works' },
@@ -31,15 +32,42 @@ const footerColumns = [
 ];
 
 const Footer: React.FC = () => {
+  const location = useLocation();
+  const isHome = location.pathname === '/';
+
+  const anchorToHome = (hash: string) => (isHome ? hash : `/${hash}`);
+
+  const handleAnchorClick = (
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+    hash: string
+  ) => {
+    if (isHome) {
+      event.preventDefault();
+      const target = document.querySelector(hash);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
   return (
     <footer className="border-t border-white/8 bg-[#040404] pb-12 pt-16 text-white/70">
       <div className="mx-auto flex max-w-[1320px] flex-col gap-12 px-5 sm:px-10 lg:flex-row lg:justify-between lg:px-16">
         <div className="max-w-sm space-y-5">
-          <a href="#top" className="text-lg font-semibold uppercase tracking-[0.35em] text-white">
+          <Link
+            to="/"
+            className="text-lg font-semibold uppercase tracking-[0.35em] text-white"
+            onClick={(event) => {
+              if (isHome) {
+                event.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
+          >
             VIXLOR AI
-          </a>
+          </Link>
           <p className="text-sm leading-relaxed text-white/65">
-            The sexy AI girl generator engineered for high-converting launches. We blend couture-trained diffusion with production-ready Webflow and GSAP components.
+            Create stunning AI girl images instantly with our advanced AI generator. Professional quality portraits, anime characters, and custom AI art. Free to use, no signup required.
           </p>
           <div className="flex flex-wrap gap-3 text-[11px] font-semibold uppercase tracking-[0.28em] text-white/45">
             <a href="https://x.com" className="hover:text-white">X</a>
@@ -56,9 +84,23 @@ const Footer: React.FC = () => {
               <ul className="space-y-3 text-sm">
                 {column.links.map((link) => (
                   <li key={link.label}>
-                    <a href={link.href} className="transition-colors hover:text-white">
-                      {link.label}
-                    </a>
+                    {link.href.startsWith('http') || link.href.startsWith('mailto:') ? (
+                      <a href={link.href} className="transition-colors hover:text-white capitalize tracking-[0.1em]">
+                        {link.label}
+                      </a>
+                    ) : link.href.startsWith('#') ? (
+                      <Link
+                        to={anchorToHome(link.href)}
+                        className="transition-colors hover:text-white capitalize tracking-[0.1em]"
+                        onClick={(event) => handleAnchorClick(event, link.href)}
+                      >
+                        {link.label}
+                      </Link>
+                    ) : (
+                      <Link to={link.href} className="transition-colors hover:text-white capitalize tracking-[0.1em]">
+                        {link.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>

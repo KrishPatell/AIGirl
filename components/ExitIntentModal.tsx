@@ -30,7 +30,7 @@ const ExitIntentModal: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="w-[min(90vw,420px)] rounded-3xl border border-white/10 bg-[#080808] p-8 text-white shadow-[0_25px_80px_-30px_rgba(0,240,255,0.6)]">
+      <div className="w-[min(90vw,480px)] rounded-2xl border border-white/15 bg-[#080808] p-8 text-white shadow-[0_25px_80px_-30px_rgba(0,240,255,0.6)]">
         <button
           type="button"
           onClick={() => {
@@ -56,11 +56,11 @@ const ExitIntentModal: React.FC = () => {
             type="email"
             required
             placeholder="you@example.com"
-            className="w-full rounded-2xl border border-white/15 bg-black/40 px-4 py-3 text-sm text-white placeholder:text-white/40 focus:border-[#FF00A8] focus:outline-none"
+            className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 text-sm text-white placeholder:text-white/40 focus:border-[#FF00A8] focus:outline-none"
           />
           <button
             type="submit"
-            className="rounded-lg bg-gradient-to-r from-purple-600 to-pink-500 px-5 py-3 text-xs font-semibold uppercase tracking-wide text-white transition-all hover:shadow-lg"
+            className="rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 px-6 py-3 text-xs font-semibold uppercase tracking-wide text-white transition-all hover:shadow-lg"
           >
             Claim Credits
           </button>

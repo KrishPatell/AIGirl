@@ -1,37 +1,22 @@
 import React from 'react';
+import { Routes, Route } from 'react-router-dom';
 import { Analytics } from '@vercel/analytics/react';
-import Header from './components/Header';
-import HeroSection from './components/HeroSection';
-import ThumbnailCarouselSection from './components/ThumbnailCarouselSection';
-import HowItWorksSection from './components/HowItWorksSection';
-import LiveGallerySection from './components/LiveGallerySection';
-import GallerySection from './components/GallerySection';
-import PricingSection from './components/PricingSection';
-import TestimonialsSection from './components/TestimonialsSection';
-import BlogPreviewSection from './components/BlogPreviewSection';
-import FAQSection from './components/FAQSection';
-import StickyCTA from './components/StickyCTA';
-import ExitIntentModal from './components/ExitIntentModal';
-import Footer from './components/Footer';
+import HomePage from './pages/HomePage';
+import BlogIndexPage from './pages/BlogIndexPage';
+import BlogPostPage from './pages/BlogPostPage';
+import NotFoundPage from './pages/NotFoundPage';
+import ScrollToTop from './components/ScrollToTop';
 
 const App: React.FC = () => {
   return (
     <div className="bg-[#050505] text-[#F8FAFC] font-sans antialiased">
-      <ExitIntentModal />
-      <Header />
-      <main>
-        <HeroSection />
-        <ThumbnailCarouselSection />
-        <HowItWorksSection />
-        <GallerySection />
-        <LiveGallerySection />
-        <TestimonialsSection />
-        <PricingSection />
-        <BlogPreviewSection />
-        <FAQSection />
-      </main>
-      <StickyCTA />
-      <Footer />
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/blog" element={<BlogIndexPage />} />
+        <Route path="/blog/:slug" element={<BlogPostPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
       <Analytics />
     </div>
   );

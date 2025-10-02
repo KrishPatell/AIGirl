@@ -6,7 +6,7 @@ const heroSlides = featureAssets;
 
 const statBadges = [
   'Loved by 512K+ creators',
-  '140 couture style presets',
+  '140 AI art style presets',
   '5.6s average render speed',
 ];
 
@@ -60,6 +60,7 @@ const HeroSection: React.FC = () => {
           </motion.div>
 
           <motion.div
+            id="cta"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.6 }}
@@ -67,13 +68,13 @@ const HeroSection: React.FC = () => {
           >
             <button
               type="button"
-              className="w-full min-w-[260px] rounded-lg bg-gradient-to-r from-purple-600 to-pink-500 px-8 py-4 text-base font-semibold uppercase tracking-wide text-white transition-all hover:shadow-lg sm:w-auto"
+              className="w-full min-w-[220px] rounded-full bg-gradient-to-r from-purple-600 to-pink-500 px-6 py-3 text-sm font-semibold capitalize tracking-[0.12em] text-white transition-all hover:shadow-lg sm:w-auto"
             >
               Start Creating for Free
             </button>
             <a
               href="#gallery"
-              className="w-full min-w-[220px] rounded-lg border border-white/30 px-8 py-4 text-center text-base font-semibold uppercase tracking-wide text-white/80 transition-all hover:border-white/60 hover:text-white sm:w-auto"
+              className="w-full min-w-[200px] rounded-full border border-white/30 px-6 py-3 text-center text-sm font-semibold capitalize tracking-[0.12em] text-white/80 transition-all hover:border-white/60 hover:text-white sm:w-auto"
             >
               Browse Styles
             </a>

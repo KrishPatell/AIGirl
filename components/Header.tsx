@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
-const navLinks = [
-  { name: 'Styles', href: '#styles' },
-  { name: 'How It Works', href: '#how-it-works' },
-  { name: 'Gallery', href: '#gallery' },
-  { name: 'Pricing', href: '#pricing' },
-  { name: 'Blog', href: '#blog' },
+type NavLink = {
+  name: string;
+  href: string;
+  type: 'hash' | 'route';
+};
+
+const navLinks: NavLink[] = [
+  { name: 'Styles', href: '#styles', type: 'hash' },
+  { name: 'How It Works', href: '#how-it-works', type: 'hash' },
+  { name: 'Gallery', href: '#gallery', type: 'hash' },
+  { name: 'Pricing', href: '#pricing', type: 'hash' },
+  { name: 'Blog', href: '/blog', type: 'route' },
 ];
 
 const MenuIcon: React.FC<{ className?: string }> = ({ className }) => (
@@ -36,12 +43,71 @@ const CloseIcon: React.FC<{ className?: string }> = ({ className }) => (
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
+  const isHome = location.pathname === '/';
+  const isBlogPage = location.pathname.startsWith('/blog');
+
+  const scrollToHash = (hash: string) => {
+    const target = document.querySelector(hash);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const baseLinkClasses =
+    'capitalize tracking-[0.1em] text-white/70 transition-colors duration-200 hover:text-white';
+
+  const renderNavLink = (link: NavLink) => {
+  if (link.type === 'route') {
+    return (
+      <Link
+        key={link.name}
+        to={link.href}
+        className={baseLinkClasses}
+      >
+        {link.name}
+      </Link>
+    );
+  }
+
+  if (isHome) {
+    return (
+      <button
+        key={link.name}
+        type="button"
+        onClick={() => scrollToHash(link.href)}
+        className={baseLinkClasses}
+      >
+        {link.name}
+      </button>
+    );
+  }
 
   return (
-    <header className="sticky top-0 z-40 bg-[#0D0D0D]/80 backdrop-blur-xl border-b border-white/5">
+    <Link
+      key={link.name}
+      to={`/${link.href}`}
+      className={baseLinkClasses}
+    >
+      {link.name}
+    </Link>
+  );
+  };
+
+  const anchorToHome = (hash: string) => (isHome ? hash : `/${hash}`);
+
+  const handleAnchorClick = (event: React.MouseEvent<HTMLAnchorElement>, hash: string) => {
+    if (isHome) {
+      event.preventDefault();
+      scrollToHash(hash);
+    }
+  };
+
+  return (
+    <header className="sticky top-0 z-40 border-b border-white/5 bg-[#0D0D0D]/80 backdrop-blur-xl">
       <div className="mx-auto flex h-20 max-w-[1440px] items-center justify-between px-5 sm:px-10 lg:px-16">
-        <a
-          href="#top"
+        <Link
+          to="/"
           className="flex items-center gap-3 text-white transition-transform duration-300 hover:scale-[1.02]"
         >
           <span className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#FF00A8] via-[#7F2BFF] to-[#00F0FF] text-lg font-semibold tracking-widest">
@@ -50,33 +116,27 @@ const Header: React.FC = () => {
           <span className="text-lg font-semibold uppercase tracking-[0.3em] text-white/90">
             VIXLOR AI
           </span>
-        </a>
+        </Link>
 
-        <nav className="hidden items-center gap-8 text-sm font-medium uppercase text-white/70 lg:flex">
-          {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              className="tracking-[0.18em] transition-colors duration-200 hover:text-white"
-            >
-              {link.name}
-            </a>
-          ))}
+        <nav className="hidden items-center gap-6 text-sm font-medium text-white/70 lg:flex">
+          {navLinks.map(renderNavLink)}
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <a
-            href="#pricing"
-            className="rounded-lg border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white/80 transition-all hover:border-white/40 hover:text-white"
+          <Link
+            to={isHome ? '#pricing' : '/#pricing'}
+            className="rounded-full border border-white/20 px-4 py-2 text-xs font-semibold capitalize tracking-[0.1em] text-white/80 transition-all hover:border-white/40 hover:text-white"
+            onClick={(event) => handleAnchorClick(event, '#pricing')}
           >
             Login
-          </a>
-          <a
-            href="#prompt"
-            className="rounded-lg bg-gradient-to-r from-purple-600 to-pink-500 px-5 py-2 text-xs font-semibold uppercase tracking-wide text-white transition-all hover:shadow-lg"
+          </Link>
+          <Link
+            to={isHome ? '#cta' : '/#cta'}
+            className="rounded-full bg-gradient-to-r from-purple-600 to-pink-500 px-5 py-2 text-xs font-semibold capitalize tracking-[0.1em] text-white transition-all hover:shadow-lg"
+            onClick={(event) => handleAnchorClick(event, '#cta')}
           >
             Generate Now
-          </a>
+          </Link>
         </div>
 
         <button
@@ -89,33 +149,75 @@ const Header: React.FC = () => {
       </div>
 
       {isMenuOpen && (
-        <nav className="border-t border-white/5 bg-[#0D0D0D] px-6 py-6 text-sm uppercase text-white/80 lg:hidden">
-          <ul className="flex flex-col gap-5">
+        <nav className="border-t border-white/5 bg-[#0D0D0D] px-6 py-6 text-sm text-white/80 lg:hidden">
+          <ul className="flex flex-col gap-4">
             {navLinks.map((link) => (
               <li key={`mobile-${link.name}`}>
-                <a
-                  href={link.href}
-                  className="tracking-[0.25em] transition-colors hover:text-white"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {link.name}
-                </a>
+                {link.type === 'route' ? (
+                  <Link
+                    to={link.href}
+                    className={baseLinkClasses}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {link.name}
+                  </Link>
+                ) : (
+                  <Link
+                    to={anchorToHome(link.href)}
+                    className={baseLinkClasses}
+                    onClick={(event) => {
+                      handleAnchorClick(event, link.href);
+                      setIsMenuOpen(false);
+                    }}
+                  >
+                    {link.name}
+                  </Link>
+                )}
               </li>
             ))}
           </ul>
           <div className="mt-6 flex flex-col gap-3">
-            <a
-              href="#pricing"
-              className="rounded-lg border border-white/20 px-5 py-3 text-center text-xs font-semibold uppercase tracking-wide text-white/80 transition-all hover:border-white/40 hover:text-white"
-            >
-              Login
-            </a>
-            <a
-              href="#prompt"
-              className="rounded-lg bg-gradient-to-r from-purple-600 to-pink-500 px-6 py-3 text-center text-xs font-semibold uppercase tracking-wide text-white transition-all hover:shadow-lg"
-            >
-              Generate Now
-            </a>
+            {isBlogPage ? (
+              <>
+                <Link
+                  to="/#pricing"
+                  className="rounded-full border border-white/20 px-5 py-3 text-center text-xs font-semibold capitalize tracking-[0.1em] text-white/80 transition-all hover:border-white/40 hover:text-white"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/#cta"
+                  className="rounded-full bg-gradient-to-r from-purple-600 to-pink-500 px-6 py-3 text-center text-xs font-semibold capitalize tracking-[0.1em] text-white transition-all hover:shadow-lg"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Generate Now
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  to={anchorToHome('#pricing')}
+                  className="rounded-full border border-white/20 px-5 py-3 text-center text-xs font-semibold capitalize tracking-[0.1em] text-white/80 transition-all hover:border-white/40 hover:text-white"
+                  onClick={(event) => {
+                    handleAnchorClick(event, '#pricing');
+                    setIsMenuOpen(false);
+                  }}
+                >
+                  Login
+                </Link>
+                <Link
+                  to={anchorToHome('#cta')}
+                  className="rounded-full bg-gradient-to-r from-purple-600 to-pink-500 px-6 py-3 text-center text-xs font-semibold capitalize tracking-[0.1em] text-white transition-all hover:shadow-lg"
+                  onClick={(event) => {
+                    handleAnchorClick(event, '#cta');
+                    setIsMenuOpen(false);
+                  }}
+                >
+                  Generate Now
+                </Link>
+              </>
+            )}
           </div>
         </nav>
       )}
